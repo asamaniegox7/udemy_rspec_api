@@ -6,8 +6,8 @@ class CommentsController < ApplicationController
   before_action :load_article
 
   def index
-    comments = @article.comments.page(params[:page]).per(params[:per_page])
-    render json: comments
+    comments = paginate(@article.comments)
+    render_collection(comments)
   end
 
   def create
@@ -20,6 +20,10 @@ class CommentsController < ApplicationController
   end
 
   private
+
+  def serializer
+    CommentSerializer
+  end
 
   def load_article
     @article = Article.find_by(id: params[:article_id])
